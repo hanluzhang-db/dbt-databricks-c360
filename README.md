@@ -43,37 +43,34 @@ This demo is broken up into the following building blocks. View the sub-folders 
 
 
 - ```01-ingest-autoloader``` <br/>
+    * このノートブックは、レイクハウスに生データを段階的に取り込むためのものです（dbtのタスクではありません）
+    * 目的は、クラウドストレージに新しいデータがアップロードされたら、そのデータを取り込むことです。これにより、dbtパイプラインで変換処理が行えます
+    * dbtにはファイルをロードする機能「seed」がありますが、現在は```CSV```ファイルに限定されている点に注意が必要です
 
-    * This contains the notebook to ingest raw data incrementally into our Lakehouse (not a dbt task)
-    * The goal is to ingest the new data once it is uploaded into cloud storage, so our dbt pipeline can do the transformations 
-    * It is worth noting that while dbt has a functionality called ```seed``` that allows files to be loaded, it is currently limited to ```CSV``` files 
-    
 - ```dbt_project.yml```
-    * Every dbt project requires a ```dbt_project.yml``` file - this is how dbt knows a directory is a dbt project
-    * It contains information such as connection configurations to Databricks SQL Warehouses and where SQL transformation files are stored 
+    * すべてのdbtプロジェクトには```dbt_project.yml```ファイルが必要です。これにより、ディレクトリがdbtプロジェクトであることをdbtが認識します
+    * このファイルには、Databricks SQLウェアハウスへの接続設定やSQL変換ファイルの保存場所などの情報が含まれています
 
 - ```profiles.yml```
-    * This file stores profile configuration which dbt needs to connect to Databricks compute resources
-    * Connection details such as the server hostname, HTTP path, catalog, db/schema information are configured here 
-    
+    * このファイルは、dbtがDatabricksの計算リソースに接続するために必要なプロファイル設定を保存しています
+    * サーバーホスト名、HTTPパス、カタログ、データベース/スキーマ情報などの接続詳細がここで設定されます
+
 - ```models```
-    * A model in dbt refers to a single ```.sql``` file containing a modular data transformation block 
-    * In this demo, we have modularized our transformations into 4 files in accordance with the Medallion Architecture 
-    * Within each file, we can configure how the transformation will be materialized - either as a table or a view
+    * dbtでのモデルは、モジュール化されたデータ変換ブロックを含む単一の```.sql```ファイルを指します
+    * このデモでは、メダリオンアーキテクチャに従って変換を4つのファイルにモジュール化しています
+    * 各ファイル内で、変換がテーブルとして実現されるか、ビューとして実現されるかを設定できます
 
 - ```tests```
-    * Tests are assertions you make about your dbt models 
-    * They are typically used for data quality and validation purposes
-    * We also have the ability to quarantine and isolate records that fail a particular assertion
-    
+    * テストは、dbtモデルに関して行うアサーション（主張、断言）です
+    * 通常、データ品質と検証目的で使用されます
+    * 特定のアサーションに失敗したレコードを隔離し、孤立させる能力も持っています
 
 - ```03-ml-predict-churn```
-   * This contains the notebook to load our churn prediction ML model from MLFlow after the dbt transformations are complete (not a dbt task)
-   * The model is loaded as a SQL function, then applied to the ```dbt_c360_gold_churn_features``` that will be materialized at the end of the second dbt task in our workflow
+   * このノートブックは、dbt変換が完了した後にMLFlowから顧客流失予測MLモデルをロードするためのものです（dbtのタスクではありません）
+   * モデルはSQL関数としてロードされ、ワークフローの第二dbtタスクの終わりに具現化される```dbt_c360_gold_churn_features```に適用されます
 
 - ```seeds```
-    * This is an optional folder used to store sample, adhoc CSV files to be loaded into the Lakehouse. The seeds aren't used in the default setup (we use the ingestion with the autoloader instead)
-
+    * これは、レイクハウスにロードされるサンプルやアドホックなCSVファイルを保存するために使用されるオプショナルなフォルダです。デフォルトの設定では使用されません（代わりにオートローダーでの摂取を使用しています）
 
 
 <br>
